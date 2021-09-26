@@ -26,9 +26,15 @@ function sendData(res, countryList, search, page) {
     const filteredData = search ? countryList.filter(({ name: { common='' } }) => { 
         return common.toLowerCase().indexOf(search.toLowerCase()) !== -1
     }) : countryList;
-    const currentIndex = page*10 + 1;
-    const responseData = filteredData.slice(currentIndex, currentIndex + 10);
-    res.status(200).send(responseData);
+    const currentIndex = page*10;
+    let responseData;
+    if(currentIndex + 10 < filteredData.length) {
+        responseData = filteredData.slice(currentIndex, currentIndex + 10);
+    } else {
+        responseData = filteredData.slice(currentIndex);
+    }
+    console.log('filtered data', responseData);
+    res.status(200).send({ data: responseData, total: filteredData.length });
 }
 
 app.use(express.static(__dirname+'/public'))

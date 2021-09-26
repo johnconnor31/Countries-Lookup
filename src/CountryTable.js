@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import CountryDetails from './CountryDetail';
 import Box from '@material-ui/core/Box';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -69,7 +70,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-    const { order, orderBy, rowCount, onRequestSort } =
+    const { order, orderBy, onRequestSort } =
         props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
@@ -109,8 +110,8 @@ function EnhancedTableHead(props) {
 }
 
 export default function EnhancedTable(props) {
-    const [selected, setSelected] = React.useState({});
-    const { countries = [], page, setPage, rowsPerPage, setRowsPerPage, order, setOrder, orderBy, setOrderBy, setSearch } = props;
+    const [selected, setSelected] = React.useState();
+    const { countries = [], page, setPage, total, order, setOrder, orderBy, setOrderBy, setSearch } = props;
     const [delay, setDelay] = useState();
     console.log('prps are', props);
 
@@ -129,16 +130,14 @@ export default function EnhancedTable(props) {
         setPage(newPage);
     };
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
     const changeSearch= (e) => {
         if(delay) {
             clearTimeout(delay);
         }
-        setDelay(setTimeout(() => setSearch(e.target.value), 500));
+        setDelay(setTimeout(() => { 
+            setSearch(e.target.value);
+            setPage(0);
+        }, 500));
     }
 
     return (
@@ -157,7 +156,6 @@ export default function EnhancedTable(props) {
                             size='medium'
                         >
                             <EnhancedTableHead
-                                numSelected={selected.length}
                                 order={order}
                                 orderBy={orderBy}
                                 onRequestSort={handleRequestSort}
@@ -195,14 +193,14 @@ export default function EnhancedTable(props) {
                         </Table>
                     </TableContainer>
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={[-1]}
                         component="div"
-                        count={250}
-                        rowsPerPage={rowsPerPage}
+                        count={total}
                         page={page}
+                        rowsPerPage={10}
                         onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
                     />
+                    <CountryDetails country={selected !== -1 ? countries[selected] : ''} setCountry={setSelected} />
                 </Paper>
             </Box>
         </div>
