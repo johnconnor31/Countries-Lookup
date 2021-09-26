@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import Dialog from '@material-ui/core/Dialog';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import CountryDetails from './CountryDetail';
+import ProgressDialog from './ProgressDialog';
 import Box from '@material-ui/core/Box';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -111,7 +114,7 @@ function EnhancedTableHead(props) {
 
 export default function EnhancedTable(props) {
     const [selected, setSelected] = React.useState();
-    const { countries = [], page, setPage, total, order, setOrder, orderBy, setOrderBy, setSearch } = props;
+    const { countries = [], page, setPage, total, order, setOrder, orderBy, setOrderBy, setSearch, isLoading } = props;
     const [delay, setDelay] = useState();
     console.log('prps are', props);
 
@@ -161,7 +164,7 @@ export default function EnhancedTable(props) {
                                 onRequestSort={handleRequestSort}
                                 rowCount={countries.length}
                             />
-                            <TableBody>
+                            {<TableBody>
                                 {countries.map(transformData)
                                     .map((row, index) => {
                                         
@@ -189,7 +192,7 @@ export default function EnhancedTable(props) {
                                             </TableRow>
                                         );
                                     })}
-                            </TableBody>
+                            </TableBody>}
                         </Table>
                     </TableContainer>
                     <TablePagination
@@ -201,8 +204,12 @@ export default function EnhancedTable(props) {
                         onPageChange={handleChangePage}
                     />
                     <CountryDetails country={selected !== -1 ? countries[selected] : ''} setCountry={setSelected} />
+                    
                 </Paper>
             </Box>
+            {isLoading && <div style={{ position: 'absolute', height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <CircularProgress />
+                    </div>}
         </div>
     );
 }
