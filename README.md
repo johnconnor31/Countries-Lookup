@@ -10,11 +10,12 @@ To Run the application, follow below steps:
 
 1. Clone the repository
 2. Navigate inside the project folder and open commandline for this folder
-3. On commandline, run 'node server'
-4. It will start running a server on localhost:5000
-5. Then, open another commandline from the same folder
-6. Run 'npm start' from this commandline
-7. The application will open in the browser with URL 'localhost:3000'
+3. Now, run 'npm install'. It will take a few minutes to install all dependencies.
+4. On commandline, now run 'node server'
+5. It will start running a server on localhost:5000
+6. Then, open another commandline from the same folder
+7. Run 'npm start' from this commandline
+8. The application will open in the browser with URL 'localhost:3000'
 
 The application has below capabilities:
 
