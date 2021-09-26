@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import Dialog from '@material-ui/core/Dialog';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CountryDetails from './CountryDetail';
-import ProgressDialog from './ProgressDialog';
 import Box from '@material-ui/core/Box';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -18,7 +16,6 @@ import SearchIcon from '@material-ui/icons/SearchTwoTone';
 
 function transformData(datarow) {
     const { name: { common = '' }, currencies = {}, independent, area = 0, flags = [] } = datarow;
-    console.log('inde is', independent);
     const currencyKeys = Object.keys(currencies);
     return {
         countryName: common,
@@ -29,44 +26,24 @@ function transformData(datarow) {
     }
 }
 
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order, orderBy) {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
 const headCells = [
     {
         id: 'countryName',
-        numeric: false,
         extraPadding: true,
         label: 'Country Name',
     },
     {
         id: 'currency',
-        numeric: false,
         extraPadding: false,
         label: 'Currency',
     },
     {
         id: 'area',
-        numeric: true,
         extraPadding: false,
         label: 'Area',
     },
     {
         id: 'independent',
-        numeric: false,
         extraPadding: false,
         label: 'Status',
     }
@@ -116,8 +93,7 @@ export default function EnhancedTable(props) {
     const [selected, setSelected] = React.useState();
     const { countries = [], page, setPage, total, order, setOrder, orderBy, setOrderBy, setSearch, isLoading } = props;
     const [delay, setDelay] = useState();
-    console.log('prps are', props);
-
+    
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
@@ -133,11 +109,11 @@ export default function EnhancedTable(props) {
         setPage(newPage);
     };
 
-    const changeSearch= (e) => {
-        if(delay) {
+    const changeSearch = (e) => {
+        if (delay) {
             clearTimeout(delay);
         }
-        setDelay(setTimeout(() => { 
+        setDelay(setTimeout(() => {
             setSearch(e.target.value);
             setPage(0);
         }, 500));
@@ -167,16 +143,16 @@ export default function EnhancedTable(props) {
                             {<TableBody>
                                 {countries.map(transformData)
                                     .map((row, index) => {
-                                        
+
                                         return (
                                             <TableRow
                                                 hover
                                                 onClick={(event) => handleClick(event, row.countryName)}
                                                 role="checkbox"
-                                                aria-checked={index===selected}
+                                                aria-checked={index === selected}
                                                 tabIndex={-1}
                                                 key={row.countryName}
-                                                selected={index===selected}
+                                                selected={index === selected}
                                             >
                                                 <TableCell
                                                     component="th"
@@ -204,12 +180,12 @@ export default function EnhancedTable(props) {
                         onPageChange={handleChangePage}
                     />
                     <CountryDetails country={selected !== -1 ? countries[selected] : ''} setCountry={setSelected} />
-                    
+
                 </Paper>
             </Box>
             {isLoading && <div style={{ position: 'absolute', height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <CircularProgress />
-                    </div>}
+                <CircularProgress />
+            </div>}
         </div>
     );
 }
